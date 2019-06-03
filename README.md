@@ -1,7 +1,10 @@
 wxSimpleJSON is a wxWidgets wrapper around CJSON. It helps a lot with JSON operations. wxSimpleJSON was initially created by Eran Ifrah, but since have been tweaked, bug fixed and few other lovely things. 
 
 ### Usage
-To use it, simply include the four files and you are set. 
+To use it, simply include the four files inside `src/` and you are set.
+
+### Examples
+Coming... 
 
 ### License
 The Library is released under wxWidgets License

@@ -87,6 +87,14 @@ wxSimpleJSON &wxSimpleJSON::Add(const wxString &name, double value)
     return *this;
 }
 
+wxSimpleJSON &wxSimpleJSON::AddNull(const wxString &name)
+{
+    DeleteProperty(name);
+    
+    cJSON_AddNullToObject(m_d, name.mb_str(wxConvUTF8).data());
+    return *this;
+}
+
 wxSimpleJSON &wxSimpleJSON::ArrayAdd(const wxArrayString &arr, const wxMBConv &conv)
 {
     wxSimpleJSON::Ptr_t parr = Create(wxSimpleJSON::kArray);

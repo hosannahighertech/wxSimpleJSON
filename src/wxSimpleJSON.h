@@ -108,6 +108,7 @@ class API_EXPORT wxSimpleJSON
     wxSimpleJSON &Add(const wxString &name, const wxString &value, const wxMBConv &conv = wxConvUTF8);
     wxSimpleJSON &Add(const wxString &name, double value);
     wxSimpleJSON &Add(const wxString &name, bool value);
+    wxSimpleJSON &AddNull(const wxString &name);
     wxSimpleJSON &Add(const wxString &name, const wxArrayString &arr, const wxMBConv &conv = wxConvUTF8);
 
     /**

@@ -243,6 +243,18 @@ bool wxSimpleJSON::DeleteProperty(const wxString &name)
     return true;
 }
 
+bool wxSimpleJSON::HasProperty(const wxString& name)
+{
+    if(!m_d || (m_d->type != cJSON_Object)) {
+        return false;
+    }
+    cJSON *p = cJSON_GetObjectItem(m_d, name.mb_str(wxConvUTF8).data());
+    if(!p) {
+        return false;
+    }
+    return true;
+}
+
 wxString wxSimpleJSON::Print(bool pretty, const wxMBConv &conv) const
 {
     char *b = pretty ? cJSON_Print(m_d) : cJSON_PrintUnformatted(m_d);

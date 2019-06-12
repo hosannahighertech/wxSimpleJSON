@@ -139,6 +139,11 @@ class API_EXPORT wxSimpleJSON
      * @brief delete property with a given name
      */
     bool DeleteProperty(const wxString &name);
+    
+     /**
+     * @brief Check if object contains the specific Key. On non object always returns false
+     */
+     bool HasProperty(const wxString& name);
 
     /**
      * @brief convert this JSON object to string

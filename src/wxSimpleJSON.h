@@ -16,17 +16,6 @@ class API_EXPORT wxSimpleJSON
     bool m_canDelete;
 
   public:
-// it matches the definitions in cJSON.h
-/* cJSON Types: */
-#define cJSON_Invalid (0)
-#define cJSON_False (1 << 0)
-#define cJSON_True (1 << 1)
-#define cJSON_NULL (1 << 2)
-#define cJSON_Number (1 << 3)
-#define cJSON_String (1 << 4)
-#define cJSON_Array (1 << 5)
-#define cJSON_Object (1 << 6)
-#define cJSON_Raw (1 << 7) /* raw json */
 
     enum eType
     {

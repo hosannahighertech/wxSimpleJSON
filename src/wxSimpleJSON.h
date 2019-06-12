@@ -126,6 +126,10 @@ class API_EXPORT wxSimpleJSON
      */
     wxArrayString GetValueArrayString(const wxMBConv &conv = wxConvUTF8) const;
     /**
+     * @brief return the array Object value
+     */
+    std::vector<wxSimpleJSON::Ptr_t> GetValueArrayObject() const;
+    /**
      * @brief return the number value
      */
     double GetValueNumber(double defaultValue = -1) const;

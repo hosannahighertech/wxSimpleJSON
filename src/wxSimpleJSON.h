@@ -17,17 +17,17 @@ class API_EXPORT wxSimpleJSON
 
   public:
 
-    enum eType
+    enum JSONType
     {
-        kInvalid = 0,
-        kFalse = 1,
-        kTrue = 2,
-        kNull = 4,
-        kNumber = 8,
-        kString = 16,
-        kArray = 32,
-        kObject = 64,
-        kRaw = 128
+        IS_INVALID = 0,
+        IS_FALSE = 1,
+        IS_TRUE = 2,
+        IS_NULL = 4,
+        IS_NUMBER = 8,
+        IS_STRING = 16,
+        IS_ARRAY = 32,
+        IS_OBJECT = 64,
+        IS_RAW = 128
     };
     virtual ~wxSimpleJSON();
     typedef wxSharedPtr<wxSimpleJSON> Ptr_t;
@@ -50,7 +50,7 @@ class API_EXPORT wxSimpleJSON
      * @param isRoot pass this when creating the top level item (the root item of the JSON)
      * @note Check for IsNull()
      */
-    static wxSimpleJSON::Ptr_t Create(wxSimpleJSON::eType type, bool isRoot = false);
+    static wxSimpleJSON::Ptr_t Create(wxSimpleJSON::JSONType, bool isRoot = false);
 
     /**
      * @brief parse and reutrn wxSimpleJSON object

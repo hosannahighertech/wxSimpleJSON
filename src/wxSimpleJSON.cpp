@@ -269,6 +269,11 @@ bool wxSimpleJSON::HasProperty(const wxString& name)
     return true;
 }
 
+wxSimpleJSON::JSONType wxSimpleJSON::GetType()
+{
+    return static_cast<wxSimpleJSON::JSONType>(m_d->type);
+}
+
 wxString wxSimpleJSON::Print(bool pretty, const wxMBConv &conv) const
 {
     char *b = pretty ? cJSON_Print(m_d) : cJSON_PrintUnformatted(m_d);

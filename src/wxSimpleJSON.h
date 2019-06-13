@@ -137,6 +137,11 @@ class API_EXPORT wxSimpleJSON
      * @brief Check if object contains the specific Key. On non object always returns false
      */
      bool HasProperty(const wxString& name);
+     
+      /**
+     * @brief Get the Type of this Node
+     */
+     wxSimpleJSON::JSONType GetType();
 
     /**
      * @brief convert this JSON object to string

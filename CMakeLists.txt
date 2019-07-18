@@ -14,9 +14,5 @@ add_library(simplejson SHARED
 find_package(wxWidgets REQUIRED net core base)
 include(${wxWidgets_USE_FILE})
 
-target_include_directories(simplejson
-    PUBLIC 
-    ${PROJECT_SOURCE_DIR}/src
-)
-
+include_directories(${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(simplejson ${wxWidgets_LIBRARIES})

@@ -138,10 +138,16 @@ class API_EXPORT wxSimpleJSON
      */
      bool HasProperty(const wxString& name);
      
-      /**
+    /**
      * @brief Get the Type of this Node
      */
      wxSimpleJSON::JSONType GetType();
+
+    /**
+     * @brief Get Object Keys
+     * @return array of Strings containing object Keys
+     */
+     wxArrayString GetObjectKeys(const wxMBConv &conv = wxConvUTF8);
 
     /**
      * @brief convert this JSON object to string

@@ -274,6 +274,23 @@ wxSimpleJSON::JSONType wxSimpleJSON::GetType()
     return static_cast<wxSimpleJSON::JSONType>(m_d->type);
 }
 
+wxArrayString wxSimpleJSON::GetObjectKeys(const wxMBConv &conv)
+{
+    cJSON *current_element = NULL;
+    char *current_key = NULL;
+    wxArrayString keys;
+
+    cJSON_ArrayForEach(current_element, m_d)
+    {
+        current_key = current_element->string;
+        if (current_key != NULL)
+        {
+            keys.Add(wxString(current_key, conv));
+        }
+    }
+    return keys;
+}
+
 wxString wxSimpleJSON::Print(bool pretty, const wxMBConv &conv) const
 {
     char *b = pretty ? cJSON_Print(m_d) : cJSON_PrintUnformatted(m_d);

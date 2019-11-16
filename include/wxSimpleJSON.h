@@ -133,6 +133,11 @@ class API_EXPORT wxSimpleJSON
      */
     bool DeleteProperty(const wxString &name);
     
+    /**
+     * @brief delete property with a given zero based array index
+     */
+    bool DeleteProperty(int idx);
+    
      /**
      * @brief Check if object contains the specific Key. On non object always returns false
      */

@@ -257,6 +257,15 @@ bool wxSimpleJSON::DeleteProperty(const wxString &name)
     return true;
 }
 
+bool wxSimpleJSON::DeleteProperty(int idx)
+{
+    if(!m_d || (m_d->type != cJSON_Array)) {
+        return false;
+    }
+    cJSON_DeleteItemFromArray(m_d, idx);
+    return true;
+}
+
 bool wxSimpleJSON::HasProperty(const wxString& name)
 {
     if(!m_d || (m_d->type != cJSON_Object)) {

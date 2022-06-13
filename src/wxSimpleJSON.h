@@ -5,13 +5,14 @@
 #include <wx/string.h>
 #include <wx/arrstr.h>
 #include <wx/filename.h>
-
 #include <wx/dlimpexp.h>
 
 #ifdef API_CREATING_DLL
-#define API_EXPORT WXEXPORT
-#else
-#define API_EXPORT WXIMPORT
+#    define API_EXPORT WXEXPORT
+#elif defined(WXUSINGDLL)
+#    define API_EXPORT WXIMPORT
+#else /* not making nor using DLL */
+#    define API_EXPORT
 #endif
 
 typedef struct cJSON cJSON;

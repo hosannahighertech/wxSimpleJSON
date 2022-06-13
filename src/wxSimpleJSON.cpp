@@ -1,5 +1,5 @@
 #include "wxSimpleJSON.h"
-#include "cJSON.h"
+#include "cJSON/cJSON.h"
 #include <wx/ffile.h>
 
 static cJSON *cJSONAllocNew()

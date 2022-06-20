@@ -12,7 +12,7 @@ set(SIMPLEJSON_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "
 
 #Generate the shared library from the library sources
 add_library(simplejson SHARED 
-    ${PROJECT_SOURCE_DIR}/src/cJSON.c
+    ${PROJECT_SOURCE_DIR}/src/cJSON/cJSON.c
     ${PROJECT_SOURCE_DIR}/src/wxSimpleJSON.cpp
 )
 

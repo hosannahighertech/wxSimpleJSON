@@ -1,6 +1,5 @@
 #include "wxSimpleJSON.h"
-#include "cJSON.h"
-#include <wx/ffile.h>
+#include "cJSON/cJSON.h"
 
 static cJSON *cJSONAllocNew()
 {
@@ -41,7 +40,7 @@ void wxSimpleJSON::Destroy(wxSimpleJSON *obj)
     if(obj->m_canDelete && obj->m_d) {
         cJSON_Delete(obj->m_d);
     }
-    obj->m_d = NULL;
+    obj->m_d = nullptr;
     wxDELETE(obj);
 }
 
@@ -119,10 +118,11 @@ size_t wxSimpleJSON::ArraySize() const { return cJSON_GetArraySize(m_d); }
 
 wxSimpleJSON::Ptr_t wxSimpleJSON::Item(size_t index) const
 {
+    cJSON* item{ nullptr };
     if(!m_d || (m_d->type != cJSON_Array)) {
-        return Create((cJSON *)NULL);
+        return Create(item);
     }
-    cJSON *item = cJSON_GetArrayItem(m_d, index);
+    item = cJSON_GetArrayItem(m_d, index);
     return Create(item);
 }
 
@@ -173,7 +173,7 @@ double wxSimpleJSON::GetValueNumber(double defaultValue) const
 wxSimpleJSON::Ptr_t wxSimpleJSON::GetProperty(const wxString &name) const
 {
     if(!m_d || (m_d->type != cJSON_Object)) {
-        return Create(NULL);
+        return Create(nullptr);
     }
     return Create(cJSON_GetObjectItem(m_d, name.mb_str(wxConvUTF8).data()));
 }
@@ -219,10 +219,10 @@ wxSimpleJSON::Ptr_t wxSimpleJSON::Create(const wxString &buffer, bool isRoot, co
     return Create(p, isRoot);
 }
 
-wxSimpleJSON::Ptr_t wxSimpleJSON::Create(const wxFileName &filename, const wxMBConv &conv)
+wxSimpleJSON::Ptr_t wxSimpleJSON::LoadFile(const wxFileName &filename, const wxMBConv &conv)
 {
     if(!filename.Exists()) {
-        return Create(NULL);
+        return Create(nullptr);
     }
     wxFFile fp(filename.GetFullPath(), "rb");
     wxString content;
@@ -230,7 +230,7 @@ wxSimpleJSON::Ptr_t wxSimpleJSON::Create(const wxFileName &filename, const wxMBC
         fp.Close();
         return Create(content, true, conv);
     }
-    return Create(NULL);
+    return Create(nullptr);
 }
 
 bool wxSimpleJSON::Save(const wxFileName &filename, const wxMBConv &conv)
@@ -285,14 +285,14 @@ wxSimpleJSON::JSONType wxSimpleJSON::GetType()
 
 wxArrayString wxSimpleJSON::GetObjectKeys(const wxMBConv &conv)
 {
-    cJSON *current_element = NULL;
-    char *current_key = NULL;
+    cJSON *current_element = nullptr;
+    char *current_key = nullptr;
     wxArrayString keys;
 
     cJSON_ArrayForEach(current_element, m_d)
     {
         current_key = current_element->string;
-        if (current_key != NULL)
+        if (current_key != nullptr)
         {
             keys.Add(wxString(current_key, conv));
         }

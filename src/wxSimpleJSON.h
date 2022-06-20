@@ -6,6 +6,8 @@
 #include <wx/arrstr.h>
 #include <wx/filename.h>
 #include <wx/dlimpexp.h>
+#include <wx/ffile.h>
+#include <vector>
 
 #ifdef API_CREATING_DLL
 #    define API_EXPORT WXEXPORT
@@ -20,8 +22,8 @@ typedef struct cJSON cJSON;
 class API_EXPORT wxSimpleJSON
 {
   protected:
-    cJSON *m_d;
-    bool m_canDelete;
+    cJSON *m_d{ nullptr};
+    bool m_canDelete{ false };
 
   public:
 
@@ -38,12 +40,12 @@ class API_EXPORT wxSimpleJSON
         IS_RAW = 128
     };
     virtual ~wxSimpleJSON();
-    typedef wxSharedPtr<wxSimpleJSON> Ptr_t;
+
+    using Ptr_t = wxSharedPtr<wxSimpleJSON>;
 
   private:
-    // Constructor is private. The way to create an object is by using the ::Create method
-    wxSimpleJSON();
-
+    // Constructor is private. The way to create an object is by using the Create() or LoadFile() methods
+	wxSimpleJSON();
     /**
      * @brief the deleter pointer
      */
@@ -56,21 +58,21 @@ class API_EXPORT wxSimpleJSON
      * @brief create a new JSON node.
      * @param type the node type
      * @param isRoot pass this when creating the top level item (the root item of the JSON)
-     * @note Check for IsNull()
+     * @note Check returned object by calling IsNull() or IsOk()
      */
     static wxSimpleJSON::Ptr_t Create(wxSimpleJSON::JSONType, bool isRoot = false);
 
     /**
-     * @brief parse and reutrn wxSimpleJSON object
-     * @note Check for IsNull()
+     * @brief parse and return wxSimpleJSON object
+     * @note Check returned object by calling IsNull() or IsOk()
      */
     static wxSimpleJSON::Ptr_t Create(const wxString &buffer, bool isRoot = false, const wxMBConv &conv = wxConvUTF8);
 
     /**
-     * @brief read JSON content from a file, parse and reutrn wxSimpleJSON object
-     * @note Check for IsNull()
+     * @brief read JSON content from a file, parse it, and return a wxSimpleJSON object that can be transversed
+     * @note Check returned object by calling IsNull() or IsOk()
      */
-    static wxSimpleJSON::Ptr_t Create(const wxFileName &filename, const wxMBConv &conv = wxConvUTF8);
+    static wxSimpleJSON::Ptr_t LoadFile(const wxFileName &filename, const wxMBConv &conv = wxConvUTF8);
 
     /**
      * @brief save the content of this object to a file
@@ -78,9 +80,14 @@ class API_EXPORT wxSimpleJSON
     bool Save(const wxFileName &filename, const wxMBConv &conv = wxConvUTF8);
 
     /**
-     * @brief is this object NULL?
+     * @brief is this object null?
      */
-    inline bool IsNull() const { return (m_d == NULL); }
+    inline bool IsNull() const { return (m_d == nullptr); }
+
+	/**
+     * @brief is this object valid (non null)?
+     */
+    inline bool IsOk() const { return (m_d != nullptr); }
 
     // Array manipulation
     wxSimpleJSON &ArrayAdd(wxSimpleJSON::Ptr_t obj);
@@ -90,13 +97,13 @@ class API_EXPORT wxSimpleJSON
     wxSimpleJSON &ArrayAdd(const wxArrayString &arr, const wxMBConv &conv = wxConvUTF8);
 
     /**
-     * @brief return the array size. Returns 0 if this object is not an array
+     * @brief return the array size. Returns 0 if this object is not an array (or empty)
      */
     size_t ArraySize() const;
     /**
      * @brief return an array item at a given position
      * @param index item position in the array
-     * @return valid wxSimpleJSON::Ptr_t obj is a Null object (call wxSimpleJSON::IsNull() to test for null)
+     * @return A wxSimpleJSON::Ptr_t obj (call IsNull() or IsOk() to test for null)
      */
     wxSimpleJSON::Ptr_t Item(size_t index) const;
 
@@ -142,12 +149,12 @@ class API_EXPORT wxSimpleJSON
     bool DeleteProperty(const wxString &name);
     
     /**
-     * @brief delete property with a given zero based array index
+     * @brief delete property with a given zero-based array index
      */
     bool DeleteProperty(int idx);
     
      /**
-     * @brief Check if object contains the specific Key. On non object always returns false
+     * @brief Check if object contains the specific Key. A non object always returns @c false
      */
      bool HasProperty(const wxString& name);
      

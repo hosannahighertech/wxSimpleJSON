@@ -197,7 +197,8 @@ class API_EXPORT wxSimpleJSON
                       const wxMBConv &conv = wxConvUTF8);
 
     /**
-     * @brief Return the node's value as a string (if it is a string).
+     * @brief Return the node's value as a string
+            (if its type is JSONType::IS_STRING).
      * @param conv How to encode the value while reading it.
      * @return The string value that was read, or empty string upon failure.
      * @note Call GetType() to verify the node's data type to ensure that
@@ -206,7 +207,8 @@ class API_EXPORT wxSimpleJSON
     wxString GetValueString(const wxMBConv &conv = wxConvUTF8) const;
 
     /**
-     * @brief Return the node's value as a boolean (if it is boolean).
+     * @brief Return the node's value as a boolean
+            (if its type is JSONType::IS_FALSE or JSONType::IS_TRUE).
      * @param defaultValue The value to return if reading it as a
      *      boolean failed.
      * @return The value as a boolean.
@@ -217,7 +219,7 @@ class API_EXPORT wxSimpleJSON
 
     /**
      * @brief Returns the node's values as an array of strings
-            (if that is its type).
+            (if its type is JSONType::IS_ARRAY).
      * @param conv How to encode the values while reading them.
      * @return The node's values as a string array.
      * @note Call GetType() to verify the node's data type to ensure that
@@ -225,8 +227,8 @@ class API_EXPORT wxSimpleJSON
      */
     wxArrayString GetValueArrayString(const wxMBConv &conv = wxConvUTF8) const;
     /**
-     * @brief Returns the node's values as an array of strings
-            (if that is its type).
+     * @brief Returns the node's values as an array of nodes.
+            (if its type is JSONType::IS_ARRAY).
      * @param conv How to encode the values while reading them.
      * @return The node's values as a string array.
      * @note Call GetType() to verify the node's data type to ensure that
@@ -235,7 +237,7 @@ class API_EXPORT wxSimpleJSON
     std::vector<wxSimpleJSON::Ptr_t> GetValueArrayObject() const;
     /**
      * @brief Returns the node's value as a double
-     *      (if that is its value type).
+     *      (if its type is JSONType::IS_NUMBER).
      * @param defaultValue The value to return upon failure.
      * @note Call GetType() to verify the node's data type to ensure that
      *      you are calling the correct @c GetValue___() function.

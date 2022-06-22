@@ -148,6 +148,20 @@ wxArrayString wxSimpleJSON::GetValueArrayString(const wxMBConv &conv) const
     return arr;
 }
 
+std::vector<wxString> wxSimpleJSON::GetValueStringVector(const wxMBConv& conv) const
+{
+    if (!m_d || (m_d->type != cJSON_Array)) {
+        return std::vector<wxString>();
+    }
+
+    std::vector<wxString> arr;
+    wxSimpleJSON::Ptr_t parr = Create(m_d);
+    for (size_t i = 0; i < parr->ArraySize(); ++i) {
+        arr.emplace_back(parr->Item(i)->GetValueString(conv));
+    }
+    return arr;
+}
+
 std::vector<wxSimpleJSON::Ptr_t> wxSimpleJSON::GetValueArrayObject() const
 {
     if(!m_d || (m_d->type != cJSON_Array)) {

@@ -184,6 +184,20 @@ double wxSimpleJSON::GetValueNumber(double defaultValue) const
     return m_d->valuedouble;
 }
 
+std::vector<double> wxSimpleJSON::GetValueArrayNumber(double defaultValue) const
+{
+    if (!m_d || (m_d->type != cJSON_Array)) {
+        return std::vector<double>();
+    }
+
+    std::vector<double> arr;
+    wxSimpleJSON::Ptr_t parr = Create(m_d);
+    for (size_t i = 0; i < parr->ArraySize(); ++i) {
+        arr.emplace_back(parr->Item(i)->GetValueNumber(defaultValue));
+    }
+    return arr;
+}
+
 wxSimpleJSON::Ptr_t wxSimpleJSON::GetProperty(const wxString &name) const
 {
     if(!m_d || (m_d->type != cJSON_Object)) {

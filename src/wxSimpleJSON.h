@@ -251,6 +251,15 @@ class API_EXPORT wxSimpleJSON
      *      you are calling the correct @c GetValue___() function.
      */
     double GetValueNumber(double defaultValue = -1) const;
+    /**
+     * @brief Returns the node's values as an array of numbers
+            (if its type is JSONType::IS_ARRAY and the array's values are numeric).
+     * @param defaultValue The value to return upon failure.
+     * @return The node's values as a vector of numbers.
+     * @note Call GetType() to verify the node's data type to ensure that
+     *      you are calling the correct @c GetValue___() function.
+     */
+    std::vector<double> GetValueArrayNumber(double defaultValue = -1) const;
 
     /**
      * @brief Returns a node's property (by name).

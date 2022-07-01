@@ -217,6 +217,15 @@ class API_EXPORT wxSimpleJSON
      */
     bool GetValueBool(bool defaultValue = false) const;
     /**
+     * @brief Returns the node's values as an array of booleans
+            (if its type is JSONType::IS_TRUE/IS_FALSE and the array's values are boolean).
+     * @param defaultValue The value to return upon failure.
+     * @return The node's values as a vector of booleans.
+     * @note Call GetType() to verify the node's data type to ensure that
+     *      you are calling the correct @c GetValue___() function.
+     */
+    std::vector<bool> GetValueArrayBool(bool defaultValue = false) const;
+    /**
      * @brief Returns the node's values as an array of strings
             (if its type is JSONType::IS_ARRAY).
      * @param conv How to encode the values while reading them.

@@ -241,6 +241,20 @@ bool wxSimpleJSON::GetValueBool(bool defaultValue) const
     return m_d->type == cJSON_True;
 }
 
+std::vector<bool> wxSimpleJSON::GetValueArrayBool(bool defaultValue) const
+{
+    if (!m_d || (m_d->type != cJSON_Array)) {
+        return std::vector<bool>();
+    }
+
+    std::vector<bool> arr;
+    wxSimpleJSON::Ptr_t parr = Create(m_d);
+    for (size_t i = 0; i < parr->ArraySize(); ++i) {
+        arr.push_back(parr->Item(i)->GetValueBool(defaultValue));
+    }
+    return arr;
+}
+
 wxSimpleJSON::Ptr_t wxSimpleJSON::Create(const wxString &buffer, bool isRoot, const wxMBConv &conv)
 {
     cJSON *p = cJSON_Parse(buffer.mb_str(conv).data());

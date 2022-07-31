@@ -257,8 +257,43 @@ std::vector<bool> wxSimpleJSON::GetValueArrayBool(bool defaultValue) const
 
 wxSimpleJSON::Ptr_t wxSimpleJSON::Create(const wxString &buffer, bool isRoot, const wxMBConv &conv)
 {
-    cJSON *p = cJSON_Parse(buffer.mb_str(conv).data());
-    return Create(p, isRoot);
+    const char *parseEnd{ nullptr };
+    const auto scopedBuffer = buffer.mb_str(conv);
+    cJSON *p = cJSON_ParseWithOpts(scopedBuffer.data(), &parseEnd, true);
+    auto parsedNode = Create(p, isRoot);
+    if (p == nullptr) {
+        const auto lineCount = std::count(scopedBuffer.data(), parseEnd, '\n');
+        // get the full line where the error occurred
+        auto startOfErrorLine = parseEnd;
+        while (startOfErrorLine > scopedBuffer.data() && *startOfErrorLine != '\n') {
+            --startOfErrorLine;
+            if (*startOfErrorLine == '\n') {
+                ++startOfErrorLine;
+                break;
+                }
+            }
+        auto endOfErrorLine = parseEnd;
+        while (*endOfErrorLine != 0 && *endOfErrorLine != '\n') {
+            ++endOfErrorLine;
+            if (*endOfErrorLine == '\n') {
+                --endOfErrorLine;
+                break;
+                }
+            }
+        // get the text where the error occurred
+        wxString errorLine(startOfErrorLine, conv, endOfErrorLine-startOfErrorLine);
+        wxString errorLineStartOfError(parseEnd, conv, endOfErrorLine-parseEnd);
+        parsedNode->SetLastError(
+            wxString::Format(_(L"JSON parsing error at line %s, column %s.\n\n"
+                                "full line:\n%s\n\n"
+                                "start of error:\n%s"),
+                wxNumberFormatter::ToString(lineCount + 1 /* human readable 1 indexed*/, 0,
+                                            wxNumberFormatter::Style::Style_WithThousandsSep),
+                wxNumberFormatter::ToString((parseEnd-startOfErrorLine) + 1 /* human readable 1 indexed*/, 0,
+                                            wxNumberFormatter::Style::Style_WithThousandsSep),
+                errorLine, errorLineStartOfError));
+    }
+    return parsedNode;
 }
 
 wxSimpleJSON::Ptr_t wxSimpleJSON::LoadFile(const wxFileName &filename, const wxMBConv &conv)

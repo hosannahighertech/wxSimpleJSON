@@ -7,6 +7,7 @@
 #include <wx/filename.h>
 #include <wx/dlimpexp.h>
 #include <wx/ffile.h>
+#include <wx/numformatter.h>
 #include <vector>
 
 #ifdef API_CREATING_DLL
@@ -25,6 +26,7 @@ class API_EXPORT wxSimpleJSON
   protected:
     cJSON *m_d{ nullptr};
     bool m_canDelete{ false };
+    wxString m_lastError;
 
   public:
 
@@ -66,6 +68,11 @@ class API_EXPORT wxSimpleJSON
     static void Destroy(wxSimpleJSON *obj);
     static wxSimpleJSON::Ptr_t Create(cJSON *p, bool canDelete = false);
 
+    /// @brief Sets the error message if parser or create fails.
+    /// @param error The error message.
+    void SetLastError(const wxString& error)
+        { m_lastError = error; }
+
   public:
     // Custom object generators
     /**
@@ -95,7 +102,8 @@ class API_EXPORT wxSimpleJSON
      * @note Check returned the object by calling IsNull() or IsOk().
      * @return A wxSimpleJSON object.
      */
-    static wxSimpleJSON::Ptr_t LoadFile(const wxFileName &filename, const wxMBConv &conv = wxConvUTF8);
+    static wxSimpleJSON::Ptr_t LoadFile(const wxFileName &filename,
+                                        const wxMBConv &conv = wxConvUTF8);
 
     /**
      * @brief Saves the content of this object to a file.
@@ -116,6 +124,11 @@ class API_EXPORT wxSimpleJSON
      * @return @c true if the object is valid.
      */
     inline bool IsOk() const { return (m_d != nullptr); }
+
+    /// @brief Returns the last error from when the node node was created/parsed.
+    /// @details Will be empty if there weren't any errors.
+    const wxString& GetLastError() const
+        { return m_lastError; }
 
     // Array manipulation
     wxSimpleJSON &ArrayAdd(wxSimpleJSON::Ptr_t obj);

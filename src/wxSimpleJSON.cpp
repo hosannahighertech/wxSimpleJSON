@@ -126,10 +126,11 @@ wxSimpleJSON::Ptr_t wxSimpleJSON::Item(size_t index) const
     return Create(item);
 }
 
-wxString wxSimpleJSON::GetValueString(const wxMBConv &conv) const
+wxString wxSimpleJSON::GetValueString(const wxString &defaultValue,
+                                      const wxMBConv &conv) const
 {
     if(!m_d || (m_d->type != cJSON_String)) {
-        return wxEmptyString;
+        return defaultValue;
     }
     return wxString(m_d->valuestring, conv);
 }
@@ -143,7 +144,7 @@ wxArrayString wxSimpleJSON::GetValueArrayString(const wxMBConv &conv) const
     wxArrayString arr;
     wxSimpleJSON::Ptr_t parr = Create(m_d);
     for(size_t i = 0; i < parr->ArraySize(); ++i) {
-        arr.Add(parr->Item(i)->GetValueString(conv));
+        arr.Add(parr->Item(i)->GetValueString(wxEmptyString, conv));
     }
     return arr;
 }
@@ -157,7 +158,7 @@ std::vector<wxString> wxSimpleJSON::GetValueStringVector(const wxMBConv& conv) c
     std::vector<wxString> arr;
     wxSimpleJSON::Ptr_t parr = Create(m_d);
     for (size_t i = 0; i < parr->ArraySize(); ++i) {
-        arr.emplace_back(parr->Item(i)->GetValueString(conv));
+        arr.emplace_back(parr->Item(i)->GetValueString(wxEmptyString, conv));
     }
     return arr;
 }
@@ -355,7 +356,7 @@ bool wxSimpleJSON::HasProperty(const wxString& name)
     return true;
 }
 
-wxSimpleJSON::JSONType wxSimpleJSON::GetType()
+wxSimpleJSON::JSONType wxSimpleJSON::GetType() const
 {
     return static_cast<wxSimpleJSON::JSONType>(m_d->type);
 }

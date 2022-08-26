@@ -212,12 +212,15 @@ class API_EXPORT wxSimpleJSON
     /**
      * @brief Return the node's value as a string
             (if its type is JSONType::IS_STRING).
+     * @param defaultValue The value to return if reading it as a
+     *      string failed.
      * @param conv How to encode the value while reading it.
      * @return The string value that was read, or empty string upon failure.
      * @note Call GetType() to verify the node's data type to ensure that
      *      you are calling the correct @c GetValue___() function.
      */
-    wxString GetValueString(const wxMBConv &conv = wxConvUTF8) const;
+    wxString GetValueString(const wxString &defaultValue = wxEmptyString,
+                            const wxMBConv &conv = wxConvUTF8) const;
 
     /**
      * @brief Return the node's value as a boolean
@@ -316,7 +319,34 @@ class API_EXPORT wxSimpleJSON
      * @brief Get the value type that this node contains.
      * @returns The node's value type.
      */
-     wxSimpleJSON::JSONType GetType();
+     wxSimpleJSON::JSONType GetType() const;
+
+     /// @returns @c true if the node's value type is a string.
+     bool IsValueString() const
+        { return GetType() == wxSimpleJSON::JSONType::IS_STRING; }
+
+     /// @returns @c true if the node's value type is a number.
+     bool IsValueNumber() const
+        { return GetType() == wxSimpleJSON::JSONType::IS_NUMBER; }
+
+     /// @returns @c true if the node's value type is null.
+     bool IsValueNull() const
+        { return GetType() == wxSimpleJSON::JSONType::IS_NULL; }
+
+     /// @returns @c true if the node's value type is an array.
+     bool IsValueArray() const
+        { return GetType() == wxSimpleJSON::JSONType::IS_ARRAY; }
+
+     /// @returns @c true if the node's value type is an object.
+     bool IsValueObject() const
+        { return GetType() == wxSimpleJSON::JSONType::IS_OBJECT; }
+
+     /// @returns @c true if the node's value type is a boolean.
+     bool IsValueBoolean() const
+        {
+        return (GetType() == wxSimpleJSON::JSONType::IS_TRUE ||
+                GetType() == wxSimpleJSON::JSONType::IS_FALSE);
+        }
 
     /**
      * @brief Gets Object Keys.

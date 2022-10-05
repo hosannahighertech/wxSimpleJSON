@@ -364,7 +364,7 @@ bool wxSimpleJSON::HasProperty(const wxString& name)
 
 wxSimpleJSON::JSONType wxSimpleJSON::GetType() const
 {
-    return static_cast<wxSimpleJSON::JSONType>(m_d->type);
+    return (IsOk() ? static_cast<wxSimpleJSON::JSONType>(m_d->type) : JSONType::IS_INVALID);
 }
 
 wxArrayString wxSimpleJSON::GetObjectKeys(const wxMBConv &conv)

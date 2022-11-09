@@ -12,18 +12,18 @@
 #include <vector>
 #endif
 
-#ifdef API_CREATING_DLL
-#    define API_EXPORT WXEXPORT
-#elif defined(WXUSINGDLL)
-#    define API_EXPORT WXIMPORT
+#ifdef JSON_CREATING_DLL
+#    define JSON_API_EXPORT WXEXPORT
+#elif defined(JSON_USING_DLL)
+#    define JSON_API_EXPORT WXIMPORT
 #else /* not making nor using DLL */
-#    define API_EXPORT
+#    define JSON_API_EXPORT
 #endif
 
 typedef struct cJSON cJSON;
 
 /// @brief Class for reading, parsing, and writing JSON data.
-class API_EXPORT wxSimpleJSON
+class JSON_API_EXPORT wxSimpleJSON
 {
   protected:
     cJSON *m_d{ nullptr};

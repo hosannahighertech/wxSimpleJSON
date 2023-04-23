@@ -8,9 +8,7 @@
 #include <wx/dlimpexp.h>
 #include <wx/ffile.h>
 #include <wx/numformatter.h>
-#ifdef wxUSE_STL 
 #include <vector>
-#endif
 
 #ifdef JSON_CREATING_DLL
 #    define JSON_API_EXPORT WXEXPORT
@@ -234,7 +232,7 @@ class JSON_API_EXPORT wxSimpleJSON
      *      you are calling the correct @c GetValue___() function.
      */
     bool GetValueBool(bool defaultValue = false) const;
-#ifdef wxUSE_STL 
+
     /**
      * @brief Returns the node's values as an array of booleans
             (if its type is JSONType::IS_TRUE/IS_FALSE and the array's values are boolean).
@@ -244,7 +242,7 @@ class JSON_API_EXPORT wxSimpleJSON
      *      you are calling the correct @c GetValue___() function.
      */
     std::vector<bool> GetValueArrayBool(bool defaultValue = false) const;
-#endif
+
     /**
      * @brief Returns the node's values as an array of strings
             (if its type is JSONType::IS_ARRAY).
@@ -254,7 +252,7 @@ class JSON_API_EXPORT wxSimpleJSON
      *      you are calling the correct @c GetValue___() function.
      */
     wxArrayString GetValueArrayString(const wxMBConv &conv = wxConvUTF8) const;
-#ifdef wxUSE_STL 
+
     /**
      * @brief Returns the node's values as a vector of strings
             (if its type is JSONType::IS_ARRAY).
@@ -273,7 +271,7 @@ class JSON_API_EXPORT wxSimpleJSON
      *      you are calling the correct @c GetValue___() function.
      */
     std::vector<wxSimpleJSON::Ptr_t> GetValueArrayObject() const;
-#endif
+
     /**
      * @brief Returns the node's value as a double
      *      (if its type is JSONType::IS_NUMBER).
@@ -282,7 +280,7 @@ class JSON_API_EXPORT wxSimpleJSON
      *      you are calling the correct @c GetValue___() function.
      */
     double GetValueNumber(double defaultValue = -1) const;
-#ifdef wxUSE_STL 
+
     /**
      * @brief Returns the node's values as an array of numbers
             (if its type is JSONType::IS_ARRAY and the array's values are numeric).
@@ -292,7 +290,6 @@ class JSON_API_EXPORT wxSimpleJSON
      *      you are calling the correct @c GetValue___() function.
      */
     std::vector<double> GetValueArrayNumber(double defaultValue = -1) const;
-#endif
 
     /**
      * @brief Returns a node's property (by name).

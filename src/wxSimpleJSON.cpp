@@ -149,7 +149,6 @@ wxArrayString wxSimpleJSON::GetValueArrayString(const wxMBConv &conv) const
     return arr;
 }
 
-#ifdef wxUSE_STL 
 std::vector<wxString> wxSimpleJSON::GetValueStringVector(const wxMBConv& conv) const
 {
     if (!m_d || (m_d->type != cJSON_Array)) {
@@ -177,7 +176,6 @@ std::vector<wxSimpleJSON::Ptr_t> wxSimpleJSON::GetValueArrayObject() const
     }
     return arr;
 }
-#endif
 
 double wxSimpleJSON::GetValueNumber(double defaultValue) const
 {
@@ -187,7 +185,6 @@ double wxSimpleJSON::GetValueNumber(double defaultValue) const
     return m_d->valuedouble;
 }
 
-#ifdef wxUSE_STL 
 std::vector<double> wxSimpleJSON::GetValueArrayNumber(double defaultValue) const
 {
     if (!m_d || (m_d->type != cJSON_Array)) {
@@ -201,7 +198,6 @@ std::vector<double> wxSimpleJSON::GetValueArrayNumber(double defaultValue) const
     }
     return arr;
 }
-#endif
 
 wxSimpleJSON::Ptr_t wxSimpleJSON::GetProperty(const wxString &name) const
 {
@@ -246,7 +242,6 @@ bool wxSimpleJSON::GetValueBool(bool defaultValue) const
     return m_d->type == cJSON_True;
 }
 
-#ifdef wxUSE_STL 
 std::vector<bool> wxSimpleJSON::GetValueArrayBool(bool defaultValue) const
 {
     if (!m_d || (m_d->type != cJSON_Array)) {
@@ -260,7 +255,6 @@ std::vector<bool> wxSimpleJSON::GetValueArrayBool(bool defaultValue) const
     }
     return arr;
 }
-#endif
 
 wxSimpleJSON::Ptr_t wxSimpleJSON::Create(const wxString &buffer, bool isRoot, const wxMBConv &conv)
 {

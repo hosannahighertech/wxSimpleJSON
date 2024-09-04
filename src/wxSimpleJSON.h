@@ -61,7 +61,7 @@ class JSON_API_EXPORT wxSimpleJSON
   private:
     // Constructor is private. The way to create an object is by using the
     // Create() or LoadFile() methods.
-	wxSimpleJSON();
+    wxSimpleJSON();
     /**
      * @brief The deleter pointer
      */
@@ -119,7 +119,7 @@ class JSON_API_EXPORT wxSimpleJSON
      */
     inline bool IsNull() const { return (m_d == nullptr); }
 
-	/**
+    /**
      * @brief Is this object/node valid (non-null)?
      * @return @c true if the object is valid.
      */
@@ -304,14 +304,14 @@ class JSON_API_EXPORT wxSimpleJSON
      * @return @c true if the property was successfully deleted.
      */
     bool DeleteProperty(const wxString &name);
-    
+
     /**
      * @brief Deletes a property with a given zero-based array index.
      * @param idx The index of the property to delete.
      * @return @c true if the property was successfully deleted.
      */
     bool DeleteProperty(int idx);
-    
+
      /**
      * @brief Check if node contains the specific Key.
        @details Returns @c false if the property cannot be found.
@@ -319,7 +319,7 @@ class JSON_API_EXPORT wxSimpleJSON
        @return @c true if the node contains the specified property.
      */
      bool HasProperty(const wxString& name);
-     
+
     /**
      * @brief Get the value type that this node contains.
      * @returns The node's value type.

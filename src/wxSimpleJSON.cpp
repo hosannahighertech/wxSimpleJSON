@@ -178,10 +178,7 @@ std::vector<wxSimpleJSON::Ptr_t> wxSimpleJSON::AsNodes() const
     std::vector<wxSimpleJSON::Ptr_t> arr;
     wxSimpleJSON::Ptr_t parr = Create(m_d);
     for(size_t i = 0; i < parr->ArraySize(); ++i) {
-        if (parr->Item(i)->IsValueObject())
-        {
             arr.push_back(parr->Item(i));
-        }
     }
     return arr;
 }

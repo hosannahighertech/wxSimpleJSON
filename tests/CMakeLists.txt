@@ -15,14 +15,9 @@ project(simplejsontest)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
-find_package(Git)
+include(FindGit.cmake)
 if(NOT Git_FOUND)
-  # Use MSVC's built-in git, if possible
-  if (WIN32 AND EXISTS "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/TeamFoundation/Team Explorer/Git/mingw64/bin/git.exe")
-    set(GIT_EXECUTABLE "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/TeamFoundation/Team Explorer/Git/mingw64/bin/git.exe")
-  else()
-    message(FATAL_ERROR "Git not found. Unable to fetch needed libraries.")
-  endif()
+  message(FATAL_ERROR "Git not found. Unable to fetch needed libraries.")
 endif()
 
 include(FetchContent)

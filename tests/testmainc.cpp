@@ -245,9 +245,7 @@ TEST_CASE("Node Array", "[types]")
 	CHECK(datasets->AsArrayString().empty());
 	CHECK(datasets->AsString().empty());
 	CHECK(datasets->AsDoubles().empty());
-	CHECK_FALSE(datasets->AsBool());
-
-	auto blah = datasets->AsDoubles();
+    CHECK_FALSE(datasets->AsBool());
 
 	auto nodes = datasets->AsNodes();
 	REQUIRE(nodes.size() == 2);
@@ -283,6 +281,50 @@ TEST_CASE("Node Array", "[types]")
 	// everything should have been parsed OK, so shouldn't have any error log
 	CHECK(json->GetLastError().empty());
 	}
+
+//-----------------------------------------------------
+TEST_CASE("Node Array Different Types", "[types]")
+{
+	const auto json = wxSimpleJSON::Create(LR"(
+{
+"years": [ 1972, "1973", 1974 ]
+})");
+	REQUIRE(json->IsOk());
+	auto years = json->GetProperty(L"years");
+	REQUIRE(years->IsOk());
+	CHECK(years->IsValueArray());
+	CHECK_FALSE(years->IsValueBoolean());
+	CHECK_FALSE(years->IsValueNull());
+	CHECK_FALSE(years->IsValueNumber());
+	CHECK_FALSE(years->IsValueObject());
+	CHECK_FALSE(years->IsValueString());
+
+	CHECK(years->AsDouble() == -1);
+	CHECK(years->AsArrayString().size() == 1);
+	CHECK(years->AsString().empty());
+	CHECK(years->AsDoubles().size() == 2);
+	CHECK_FALSE(years->AsBool());
+
+	auto nodes = years->AsNodes();
+	REQUIRE(nodes.size() == 3);
+	auto currentYear = nodes[0];
+	REQUIRE(currentYear->IsOk());
+	CHECK(currentYear->IsValueNumber());
+	CHECK(currentYear->AsDouble() == 1972);
+
+	currentYear = nodes[1];
+	REQUIRE(currentYear->IsOk());
+	CHECK(currentYear->IsValueString());
+	CHECK(currentYear->AsString() == L"1973");
+
+	currentYear = nodes[2];
+	REQUIRE(currentYear->IsOk());
+	CHECK(currentYear->IsValueNumber());
+	CHECK(currentYear->AsDouble() == 1974);
+
+	// everything should have been parsed OK, so shouldn't have any error log
+	CHECK(json->GetLastError().empty());
+}
 
 //-----------------------------------------------------
 TEST_CASE("Load & Save", "[file]")

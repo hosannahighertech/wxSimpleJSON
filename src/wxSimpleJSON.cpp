@@ -66,7 +66,7 @@ wxSimpleJSON &wxSimpleJSON::Add(const wxString &name, wxSimpleJSON::Ptr_t obj)
 {
     DeleteProperty(name);
 
-    cJSON_AddItemToObject(m_d, name.mb_str(wxConvUTF8).data(), obj->m_d);
+    cJSON_AddItemToObject(m_d, name.utf8_str().data(), obj->m_d);
     return *this;
 }
 
@@ -74,7 +74,7 @@ wxSimpleJSON &wxSimpleJSON::Add(const wxString &name, const wxString &value, con
 {
     DeleteProperty(name);
 
-    cJSON_AddStringToObject(m_d, name.mb_str(wxConvUTF8).data(), value.mb_str(conv).data());
+    cJSON_AddStringToObject(m_d, name.utf8_str().data(), value.mb_str(conv).data());
     return *this;
 }
 
@@ -82,7 +82,7 @@ wxSimpleJSON &wxSimpleJSON::Add(const wxString &name, double value)
 {
     DeleteProperty(name);
 
-    cJSON_AddNumberToObject(m_d, name.mb_str(wxConvUTF8).data(), value);
+    cJSON_AddNumberToObject(m_d, name.utf8_str().data(), value);
     return *this;
 }
 
@@ -90,7 +90,7 @@ wxSimpleJSON &wxSimpleJSON::AddNull(const wxString &name)
 {
     DeleteProperty(name);
 
-    cJSON_AddNullToObject(m_d, name.mb_str(wxConvUTF8).data());
+    cJSON_AddNullToObject(m_d, name.utf8_str().data());
     return *this;
 }
 
@@ -213,7 +213,7 @@ wxSimpleJSON::Ptr_t wxSimpleJSON::GetProperty(const wxString &name) const
     if(!m_d || (m_d->type != cJSON_Object)) {
         return Create(nullptr);
     }
-    return Create(cJSON_GetObjectItem(m_d, name.mb_str(wxConvUTF8).data()));
+    return Create(cJSON_GetObjectItem(m_d, name.utf8_str().data()));
 }
 
 wxSimpleJSON &wxSimpleJSON::ArrayAdd(bool value)
@@ -238,7 +238,7 @@ wxSimpleJSON &wxSimpleJSON::Add(const wxString &name, bool value)
     if(!m_d || (m_d->type != cJSON_Object)) {
         return *this;
     }
-    cJSON_AddBoolToObject(m_d, name.mb_str(wxConvUTF8).data(), value);
+    cJSON_AddBoolToObject(m_d, name.utf8_str().data(), value);
     return *this;
 }
 
@@ -336,11 +336,11 @@ bool wxSimpleJSON::DeleteProperty(const wxString &name)
     if(!m_d || (m_d->type != cJSON_Object)) {
         return false;
     }
-    cJSON *p = cJSON_GetObjectItem(m_d, name.mb_str(wxConvUTF8).data());
+    cJSON *p = cJSON_GetObjectItem(m_d, name.utf8_str().data());
     if(!p) {
         return false;
     }
-    cJSON_DeleteItemFromObject(m_d, name.mb_str(wxConvUTF8).data());
+    cJSON_DeleteItemFromObject(m_d, name.utf8_str().data());
     return true;
 }
 
@@ -360,7 +360,7 @@ bool wxSimpleJSON::HasProperty(const wxString& name)
     if(!m_d || (m_d->type != cJSON_Object)) {
         return false;
     }
-    cJSON *p = cJSON_GetObjectItem(m_d, name.mb_str(wxConvUTF8).data());
+    cJSON *p = cJSON_GetObjectItem(m_d, name.utf8_str().data());
     if(!p) {
         return false;
     }

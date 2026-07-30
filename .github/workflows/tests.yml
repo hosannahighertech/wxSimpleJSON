@@ -1,0 +1,35 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libgtk-3-dev
+
+      - name: Cache wxWidgets/Catch2 FetchContent build
+        uses: actions/cache@v6
+        with:
+          path: tests/build/_deps
+          key: ${{ runner.os }}-fetchcontent-${{ hashFiles('tests/CMakeLists.txt') }}
+
+      - name: Configure
+        run: cmake -S tests -B tests/build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build tests/build --config Release --parallel
+
+      - name: Run tests
+        run: ctest --test-dir tests/build --output-on-failure --build-config Release

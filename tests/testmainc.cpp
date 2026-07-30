@@ -365,8 +365,6 @@ TEST_CASE("Load & Save", "[file]")
 	CHECK(datasets->AsDoubles().empty());
 	CHECK_FALSE(datasets->AsBool());
 
-	auto blah = datasets->AsDoubles();
-
 	auto nodes = datasets->AsNodes();
 	REQUIRE(nodes.size() == 2);
 	auto currentDataset = nodes[0];
@@ -460,8 +458,6 @@ TEST_CASE("Add", "[add/delete]")
 "salary": 2200000.97,
 "status" : [ "active", "remote" ]
 })");
-
-	auto blah = json->Print();
 
 	REQUIRE(json->IsOk());
 	json->Add(L"user-name", wxString{ L"Stefano" });

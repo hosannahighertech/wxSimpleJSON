@@ -29,7 +29,7 @@ jobs:
         run: cmake -S tests -B tests/build -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
-        run: cmake --build tests/build --config Release --parallel
+        run: cmake --build tests/build --config Release --target simplejsontest --parallel 2
 
       - name: Run tests
         run: ctest --test-dir tests/build --output-on-failure --build-config Release

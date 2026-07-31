@@ -28,20 +28,21 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/wxWidgets/wxWidgets.git
   GIT_TAG        v3.3.1 # latest dev branch
 )
-message(STATUS "Fetching Catch2...")
+message(STATUS "Fetching GoogleTest...")
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_Declare(
-  Catch2
-  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  GIT_TAG        v3.10.0
+  googletest
+  GIT_REPOSITORY https://github.com/google/googletest.git
+  GIT_TAG        v1.17.0
 )
-FetchContent_MakeAvailable(wxWidgets Catch2)
+FetchContent_MakeAvailable(wxWidgets googletest)
 
 add_executable(${CMAKE_PROJECT_NAME}
   ${PROJECT_SOURCE_DIR}/../src/cJSON/cJSON.c
   ${PROJECT_SOURCE_DIR}/../src/wxSimpleJSON.cpp
   ${PROJECT_SOURCE_DIR}/testmainc.cpp)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Catch2::Catch2WithMain wx::core wx::base)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE GTest::gtest_main wx::core wx::base)
 include(CTest)
-include(Catch)
-catch_discover_tests(${CMAKE_PROJECT_NAME})
+include(GoogleTest)
+gtest_discover_tests(${CMAKE_PROJECT_NAME})

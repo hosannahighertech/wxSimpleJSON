@@ -1,50 +1,49 @@
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/matchers/catch_matchers_floating_point.hpp>
+#include <gtest/gtest.h>
 #include "../src/wxSimpleJSON.h"
 
 //-----------------------------------------------------
-TEST_CASE("String", "[types]")
+TEST(Types, String)
 {
 	const auto json = wxSimpleJSON::Create(LR"(
 {
 "user-name": "Blake M."
 })");
-	REQUIRE(json->IsOk());
+	ASSERT_TRUE(json->IsOk());
 	auto userName = json->GetProperty(L"user-name");
-	REQUIRE(userName->IsOk());
-	CHECK_FALSE(userName->IsValueArray());
-	CHECK_FALSE(userName->IsValueBoolean());
-	CHECK_FALSE(userName->IsValueNull());
-	CHECK_FALSE(userName->IsValueNumber());
-	CHECK_FALSE(userName->IsValueObject());
-	CHECK(userName->IsValueString());
+	ASSERT_TRUE(userName->IsOk());
+	EXPECT_FALSE(userName->IsValueArray());
+	EXPECT_FALSE(userName->IsValueBoolean());
+	EXPECT_FALSE(userName->IsValueNull());
+	EXPECT_FALSE(userName->IsValueNumber());
+	EXPECT_FALSE(userName->IsValueObject());
+	EXPECT_TRUE(userName->IsValueString());
 
-	CHECK(userName->AsString() == L"Blake M.");
+	EXPECT_TRUE(userName->AsString() == L"Blake M.");
 }
 
 //-----------------------------------------------------
-TEST_CASE("Integer", "[types]")
+TEST(Types, Integer)
 {
 	const auto json = wxSimpleJSON::Create(LR"(
 {
 "user-name": "Blake M.",
 "user-id": 84517
 })");
-	REQUIRE(json->IsOk());
+	ASSERT_TRUE(json->IsOk());
 	auto userId = json->GetProperty(L"user-id");
-	REQUIRE(userId->IsOk());
-	CHECK_FALSE(userId->IsValueArray());
-	CHECK_FALSE(userId->IsValueBoolean());
-	CHECK_FALSE(userId->IsValueNull());
-	CHECK(userId->IsValueNumber());
-	CHECK_FALSE(userId->IsValueObject());
-	CHECK_FALSE(userId->IsValueString());
+	ASSERT_TRUE(userId->IsOk());
+	EXPECT_FALSE(userId->IsValueArray());
+	EXPECT_FALSE(userId->IsValueBoolean());
+	EXPECT_FALSE(userId->IsValueNull());
+	EXPECT_TRUE(userId->IsValueNumber());
+	EXPECT_FALSE(userId->IsValueObject());
+	EXPECT_FALSE(userId->IsValueString());
 
-	CHECK(userId->AsDouble() == 84517);
+	EXPECT_TRUE(userId->AsDouble() == 84517);
 }
 
 //-----------------------------------------------------
-TEST_CASE("Double", "[types]")
+TEST(Types, Double)
 {
 	const auto json = wxSimpleJSON::Create(LR"(
 {
@@ -52,21 +51,21 @@ TEST_CASE("Double", "[types]")
 "user-id": 84517,
 "salary": 2200000.97
 })");
-	REQUIRE(json->IsOk());
+	ASSERT_TRUE(json->IsOk());
 	auto salary = json->GetProperty(L"salary");
-	REQUIRE(salary->IsOk());
-	CHECK_FALSE(salary->IsValueArray());
-	CHECK_FALSE(salary->IsValueBoolean());
-	CHECK_FALSE(salary->IsValueNull());
-	CHECK(salary->IsValueNumber());
-	CHECK_FALSE(salary->IsValueObject());
-	CHECK_FALSE(salary->IsValueString());
+	ASSERT_TRUE(salary->IsOk());
+	EXPECT_FALSE(salary->IsValueArray());
+	EXPECT_FALSE(salary->IsValueBoolean());
+	EXPECT_FALSE(salary->IsValueNull());
+	EXPECT_TRUE(salary->IsValueNumber());
+	EXPECT_FALSE(salary->IsValueObject());
+	EXPECT_FALSE(salary->IsValueString());
 
-	CHECK_THAT(salary->AsDouble(), Catch::Matchers::WithinAbs(2200000.97, 2e-2));
+	EXPECT_NEAR(salary->AsDouble(), 2200000.97, 2e-2);
 }
 
 //-----------------------------------------------------
-TEST_CASE("Boolean", "[types]")
+TEST(Types, Boolean)
 {
 	const auto json = wxSimpleJSON::Create(LR"(
 {
@@ -75,21 +74,21 @@ TEST_CASE("Boolean", "[types]")
 "salary": 2200000.97,
 "active" : true
 })");
-	REQUIRE(json->IsOk());
+	ASSERT_TRUE(json->IsOk());
 	auto active = json->GetProperty(L"active");
-	REQUIRE(active->IsOk());
-	CHECK_FALSE(active->IsValueArray());
-	CHECK(active->IsValueBoolean());
-	CHECK_FALSE(active->IsValueNull());
-	CHECK_FALSE(active->IsValueNumber());
-	CHECK_FALSE(active->IsValueObject());
-	CHECK_FALSE(active->IsValueString());
+	ASSERT_TRUE(active->IsOk());
+	EXPECT_FALSE(active->IsValueArray());
+	EXPECT_TRUE(active->IsValueBoolean());
+	EXPECT_FALSE(active->IsValueNull());
+	EXPECT_FALSE(active->IsValueNumber());
+	EXPECT_FALSE(active->IsValueObject());
+	EXPECT_FALSE(active->IsValueString());
 
-	CHECK(active->AsBool());
+	EXPECT_TRUE(active->AsBool());
 }
 
 //-----------------------------------------------------
-TEST_CASE("Missing Property", "[types]")
+TEST(Types, MissingProperty)
 {
 	const auto json = wxSimpleJSON::Create(LR"(
 {
@@ -98,123 +97,123 @@ TEST_CASE("Missing Property", "[types]")
 "salary": 2200000.97,
 "active" : true
 })");
-	REQUIRE(json->IsOk());
+	ASSERT_TRUE(json->IsOk());
 	// there is no "location" property
 	auto location = json->GetProperty(L"location");
-	CHECK_FALSE(location->IsOk());
-	CHECK(location->IsNull());
-	CHECK_FALSE(location->IsValueArray());
-	CHECK_FALSE(location->IsValueNumber());
-	CHECK_FALSE(location->IsValueBoolean());
-	CHECK_FALSE(location->IsValueNull());
-	CHECK_FALSE(location->IsValueNumber());
-	CHECK_FALSE(location->IsValueObject());
-	CHECK_FALSE(location->IsValueString());
+	EXPECT_FALSE(location->IsOk());
+	EXPECT_TRUE(location->IsNull());
+	EXPECT_FALSE(location->IsValueArray());
+	EXPECT_FALSE(location->IsValueNumber());
+	EXPECT_FALSE(location->IsValueBoolean());
+	EXPECT_FALSE(location->IsValueNull());
+	EXPECT_FALSE(location->IsValueNumber());
+	EXPECT_FALSE(location->IsValueObject());
+	EXPECT_FALSE(location->IsValueString());
 	// safely return empty/default content
-	CHECK(location->AsArrayString().empty());
-	CHECK(location->AsStrings().empty());
-	CHECK(location->AsDoubles().empty());
-	CHECK(location->AsBools().empty());
-	CHECK(location->AsString().empty());
-	CHECK(location->AsStrings().empty());
-	CHECK(location->AsDouble(-1) == -1);
-	CHECK_FALSE(location->AsBool(false));
+	EXPECT_TRUE(location->AsArrayString().empty());
+	EXPECT_TRUE(location->AsStrings().empty());
+	EXPECT_TRUE(location->AsDoubles().empty());
+	EXPECT_TRUE(location->AsBools().empty());
+	EXPECT_TRUE(location->AsString().empty());
+	EXPECT_TRUE(location->AsStrings().empty());
+	EXPECT_TRUE(location->AsDouble(-1) == -1);
+	EXPECT_FALSE(location->AsBool(false));
 }
 
 //-----------------------------------------------------
-TEST_CASE("Empty Array", "[types]")
+TEST(Types, EmptyArray)
 {
 	const auto json = wxSimpleJSON::Create(LR"(
 {
 "datasets": []
 })");
-	REQUIRE(json->IsOk());
+	ASSERT_TRUE(json->IsOk());
 	auto datasets = json->GetProperty(L"datasets");
-	REQUIRE(datasets->IsOk());
-	CHECK(datasets->IsValueArray());
-	CHECK_FALSE(datasets->IsValueBoolean());
-	CHECK_FALSE(datasets->IsValueNull());
-	CHECK_FALSE(datasets->IsValueNumber());
-	CHECK_FALSE(datasets->IsValueObject());
-	CHECK_FALSE(datasets->IsValueString());
+	ASSERT_TRUE(datasets->IsOk());
+	EXPECT_TRUE(datasets->IsValueArray());
+	EXPECT_FALSE(datasets->IsValueBoolean());
+	EXPECT_FALSE(datasets->IsValueNull());
+	EXPECT_FALSE(datasets->IsValueNumber());
+	EXPECT_FALSE(datasets->IsValueObject());
+	EXPECT_FALSE(datasets->IsValueString());
 
-	CHECK(datasets->AsStrings().empty());
+	EXPECT_TRUE(datasets->AsStrings().empty());
 }
 
 //-----------------------------------------------------
-TEST_CASE("String Array", "[types]")
+TEST(Types, StringArray)
 {
 	const auto json = wxSimpleJSON::Create(LR"(
 {
 "datasets": [ "Head Count", "Enrollment" ]
 })");
-	REQUIRE(json->IsOk());
+	ASSERT_TRUE(json->IsOk());
 	auto datasets = json->GetProperty(L"datasets");
-	REQUIRE(datasets->IsOk());
-	CHECK(datasets->IsValueArray());
-	CHECK_FALSE(datasets->IsValueBoolean());
-	CHECK_FALSE(datasets->IsValueNull());
-	CHECK_FALSE(datasets->IsValueNumber());
-	CHECK_FALSE(datasets->IsValueObject());
-	CHECK_FALSE(datasets->IsValueString());
+	ASSERT_TRUE(datasets->IsOk());
+	EXPECT_TRUE(datasets->IsValueArray());
+	EXPECT_FALSE(datasets->IsValueBoolean());
+	EXPECT_FALSE(datasets->IsValueNull());
+	EXPECT_FALSE(datasets->IsValueNumber());
+	EXPECT_FALSE(datasets->IsValueObject());
+	EXPECT_FALSE(datasets->IsValueString());
 
-	REQUIRE(datasets->AsStrings().size() == 2);
-	CHECK(datasets->AsStrings()[0] == L"Head Count");
-	CHECK(datasets->AsStrings()[1] == L"Enrollment");
+	ASSERT_TRUE(datasets->AsStrings().size() == 2);
+	EXPECT_TRUE(datasets->AsStrings()[0] == L"Head Count");
+	EXPECT_TRUE(datasets->AsStrings()[1] == L"Enrollment");
 }
 
 //-----------------------------------------------------
-TEST_CASE("Boolean Array", "[types]")
+TEST(Types, BooleanArray)
 {
 	const auto json = wxSimpleJSON::Create(LR"(
 {
 "active": [ false, true, false ]
 })");
-	REQUIRE(json->IsOk());
+	ASSERT_TRUE(json->IsOk());
 	auto actives = json->GetProperty(L"active");
-	REQUIRE(actives->IsOk());
-	CHECK(actives->IsValueArray());
-	CHECK_FALSE(actives->IsValueBoolean());
-	CHECK_FALSE(actives->IsValueNull());
-	CHECK_FALSE(actives->IsValueNumber());
-	CHECK_FALSE(actives->IsValueObject());
-	CHECK_FALSE(actives->IsValueString());
+	ASSERT_TRUE(actives->IsOk());
+	EXPECT_TRUE(actives->IsValueArray());
+	EXPECT_FALSE(actives->IsValueBoolean());
+	EXPECT_FALSE(actives->IsValueNull());
+	EXPECT_FALSE(actives->IsValueNumber());
+	EXPECT_FALSE(actives->IsValueObject());
+	EXPECT_FALSE(actives->IsValueString());
 
-	REQUIRE(actives->AsBools().size() == 3);
-	CHECK_FALSE(actives->AsBools()[0]);
-	CHECK(actives->AsBools()[1]);
-	CHECK_FALSE(actives->AsBools()[2]);
+	ASSERT_TRUE(actives->AsBools().size() == 3);
+	EXPECT_FALSE(actives->AsBools()[0]);
+	EXPECT_TRUE(actives->AsBools()[1]);
+	EXPECT_FALSE(actives->AsBools()[2]);
 }
 
 //-----------------------------------------------------
-TEST_CASE("Double Array", "[types]")
+TEST(Types, DoubleArray)
 {
 	const auto json = wxSimpleJSON::Create(LR"(
 {
 "modes": [ 3.759, 189.842957, 0, 8 ]
 })");
-	REQUIRE(json->IsOk());
+	ASSERT_TRUE(json->IsOk());
 	auto modes = json->GetProperty(L"modes");
-	REQUIRE(modes->IsOk());
-	CHECK(modes->IsValueArray());
-	CHECK_FALSE(modes->IsValueBoolean());
-	CHECK_FALSE(modes->IsValueNull());
-	CHECK_FALSE(modes->IsValueNumber());
-	CHECK_FALSE(modes->IsValueObject());
-	CHECK_FALSE(modes->IsValueString());
+	ASSERT_TRUE(modes->IsOk());
+	EXPECT_TRUE(modes->IsValueArray());
+	EXPECT_FALSE(modes->IsValueBoolean());
+	EXPECT_FALSE(modes->IsValueNull());
+	EXPECT_FALSE(modes->IsValueNumber());
+	EXPECT_FALSE(modes->IsValueObject());
+	EXPECT_FALSE(modes->IsValueString());
 
-	REQUIRE(modes->AsDoubles().size() == 4);
+	ASSERT_TRUE(modes->AsDoubles().size() == 4);
 	// ensure full precision was read
-	CHECK_THAT(modes->AsDoubles()[0], Catch::Matchers::WithinAbs(3.759, 2e-3));
-	CHECK_THAT(modes->AsDoubles()[1], Catch::Matchers::WithinAbs(189.842957, 2e-6));
+	EXPECT_NEAR(modes->AsDoubles()[0], 3.759, 2e-3);
+	EXPECT_NEAR(modes->AsDoubles()[1], 189.842957, 2e-6);
 	// simple integral values
-	CHECK(modes->AsDoubles()[2] == 0);
-	CHECK(modes->AsDoubles()[3] == 8);
+	EXPECT_TRUE(modes->AsDoubles()[2] == 0);
+	EXPECT_TRUE(modes->AsDoubles()[3] == 8);
 }
 
 //-----------------------------------------------------
-TEST_CASE("Node Array", "[types]")
-	{
+TEST(Types, NodeArray)
+{
 	const auto json = wxSimpleJSON::Create(LR"(
 {
 "datasets": [
@@ -230,104 +229,104 @@ TEST_CASE("Node Array", "[types]")
     }
 ]
 })");
-	REQUIRE(json->IsOk());
+	ASSERT_TRUE(json->IsOk());
 	auto datasets = json->GetProperty(L"datasets");
-	REQUIRE(datasets->IsOk());
-	CHECK(datasets->IsValueArray());
-	CHECK_FALSE(datasets->IsValueBoolean());
-	CHECK_FALSE(datasets->IsValueNull());
-	CHECK_FALSE(datasets->IsValueNumber());
-	CHECK_FALSE(datasets->IsValueObject());
-	CHECK_FALSE(datasets->IsValueString());
+	ASSERT_TRUE(datasets->IsOk());
+	EXPECT_TRUE(datasets->IsValueArray());
+	EXPECT_FALSE(datasets->IsValueBoolean());
+	EXPECT_FALSE(datasets->IsValueNull());
+	EXPECT_FALSE(datasets->IsValueNumber());
+	EXPECT_FALSE(datasets->IsValueObject());
+	EXPECT_FALSE(datasets->IsValueString());
 
 	// non-sensical conversions should fail, returning to default value
-	CHECK(datasets->AsDouble() == -1);
-	CHECK(datasets->AsArrayString().empty());
-	CHECK(datasets->AsString().empty());
-	CHECK(datasets->AsDoubles().empty());
-    CHECK_FALSE(datasets->AsBool());
+	EXPECT_TRUE(datasets->AsDouble() == -1);
+	EXPECT_TRUE(datasets->AsArrayString().empty());
+	EXPECT_TRUE(datasets->AsString().empty());
+	EXPECT_TRUE(datasets->AsDoubles().empty());
+	EXPECT_FALSE(datasets->AsBool());
 
 	auto nodes = datasets->AsNodes();
-	REQUIRE(nodes.size() == 2);
+	ASSERT_TRUE(nodes.size() == 2);
 	auto currentDataset = nodes[0];
-	REQUIRE(currentDataset->IsOk());
-	CHECK(currentDataset->HasProperty(L"name"));
-	CHECK(currentDataset->GetProperty(L"name")->IsOk());
-	CHECK(currentDataset->GetProperty(L"name")->AsString() == L"Head Count");
+	ASSERT_TRUE(currentDataset->IsOk());
+	EXPECT_TRUE(currentDataset->HasProperty(L"name"));
+	EXPECT_TRUE(currentDataset->GetProperty(L"name")->IsOk());
+	EXPECT_TRUE(currentDataset->GetProperty(L"name")->AsString() == L"Head Count");
 
-	CHECK(currentDataset->HasProperty(L"file-path"));
-	CHECK(currentDataset->GetProperty(L"file-path")->IsOk());
-	CHECK(currentDataset->GetProperty(L"file-path")->AsString() == L"Head Count.txt");
+	EXPECT_TRUE(currentDataset->HasProperty(L"file-path"));
+	EXPECT_TRUE(currentDataset->GetProperty(L"file-path")->IsOk());
+	EXPECT_TRUE(currentDataset->GetProperty(L"file-path")->AsString() == L"Head Count.txt");
 
-	CHECK(currentDataset->HasProperty(L"year"));
-	CHECK(currentDataset->GetProperty(L"year")->IsOk());
-	CHECK(currentDataset->GetProperty(L"year")->AsDouble() == 2025);
+	EXPECT_TRUE(currentDataset->HasProperty(L"year"));
+	EXPECT_TRUE(currentDataset->GetProperty(L"year")->IsOk());
+	EXPECT_TRUE(currentDataset->GetProperty(L"year")->AsDouble() == 2025);
 
 	// next node
 	currentDataset = nodes[1];
-	REQUIRE(currentDataset->IsOk());
-	CHECK(currentDataset->HasProperty(L"name"));
-	CHECK(currentDataset->GetProperty(L"name")->IsOk());
-	CHECK(currentDataset->GetProperty(L"name")->AsString() == L"Enrollment");
+	ASSERT_TRUE(currentDataset->IsOk());
+	EXPECT_TRUE(currentDataset->HasProperty(L"name"));
+	EXPECT_TRUE(currentDataset->GetProperty(L"name")->IsOk());
+	EXPECT_TRUE(currentDataset->GetProperty(L"name")->AsString() == L"Enrollment");
 
-	CHECK(currentDataset->HasProperty(L"file-path"));
-	CHECK(currentDataset->GetProperty(L"file-path")->IsOk());
-	CHECK(currentDataset->GetProperty(L"file-path")->AsString() == L"Enrollment.txt");
+	EXPECT_TRUE(currentDataset->HasProperty(L"file-path"));
+	EXPECT_TRUE(currentDataset->GetProperty(L"file-path")->IsOk());
+	EXPECT_TRUE(currentDataset->GetProperty(L"file-path")->AsString() == L"Enrollment.txt");
 
-	CHECK(currentDataset->HasProperty(L"year"));
-	CHECK(currentDataset->GetProperty(L"year")->IsOk());
-	CHECK(currentDataset->GetProperty(L"year")->AsDouble() == 1987);
+	EXPECT_TRUE(currentDataset->HasProperty(L"year"));
+	EXPECT_TRUE(currentDataset->GetProperty(L"year")->IsOk());
+	EXPECT_TRUE(currentDataset->GetProperty(L"year")->AsDouble() == 1987);
 
 	// everything should have been parsed OK, so shouldn't have any error log
-	CHECK(json->GetLastError().empty());
-	}
+	EXPECT_TRUE(json->GetLastError().empty());
+}
 
 //-----------------------------------------------------
-TEST_CASE("Node Array Different Types", "[types]")
+TEST(Types, NodeArrayDifferentTypes)
 {
 	const auto json = wxSimpleJSON::Create(LR"(
 {
 "years": [ 1972, "1973", 1974 ]
 })");
-	REQUIRE(json->IsOk());
+	ASSERT_TRUE(json->IsOk());
 	auto years = json->GetProperty(L"years");
-	REQUIRE(years->IsOk());
-	CHECK(years->IsValueArray());
-	CHECK_FALSE(years->IsValueBoolean());
-	CHECK_FALSE(years->IsValueNull());
-	CHECK_FALSE(years->IsValueNumber());
-	CHECK_FALSE(years->IsValueObject());
-	CHECK_FALSE(years->IsValueString());
+	ASSERT_TRUE(years->IsOk());
+	EXPECT_TRUE(years->IsValueArray());
+	EXPECT_FALSE(years->IsValueBoolean());
+	EXPECT_FALSE(years->IsValueNull());
+	EXPECT_FALSE(years->IsValueNumber());
+	EXPECT_FALSE(years->IsValueObject());
+	EXPECT_FALSE(years->IsValueString());
 
-	CHECK(years->AsDouble() == -1);
-	CHECK(years->AsArrayString().size() == 1);
-	CHECK(years->AsString().empty());
-	CHECK(years->AsDoubles().size() == 2);
-	CHECK_FALSE(years->AsBool());
+	EXPECT_TRUE(years->AsDouble() == -1);
+	EXPECT_TRUE(years->AsArrayString().size() == 1);
+	EXPECT_TRUE(years->AsString().empty());
+	EXPECT_TRUE(years->AsDoubles().size() == 2);
+	EXPECT_FALSE(years->AsBool());
 
 	auto nodes = years->AsNodes();
-	REQUIRE(nodes.size() == 3);
+	ASSERT_TRUE(nodes.size() == 3);
 	auto currentYear = nodes[0];
-	REQUIRE(currentYear->IsOk());
-	CHECK(currentYear->IsValueNumber());
-	CHECK(currentYear->AsDouble() == 1972);
+	ASSERT_TRUE(currentYear->IsOk());
+	EXPECT_TRUE(currentYear->IsValueNumber());
+	EXPECT_TRUE(currentYear->AsDouble() == 1972);
 
 	currentYear = nodes[1];
-	REQUIRE(currentYear->IsOk());
-	CHECK(currentYear->IsValueString());
-	CHECK(currentYear->AsString() == L"1973");
+	ASSERT_TRUE(currentYear->IsOk());
+	EXPECT_TRUE(currentYear->IsValueString());
+	EXPECT_TRUE(currentYear->AsString() == L"1973");
 
 	currentYear = nodes[2];
-	REQUIRE(currentYear->IsOk());
-	CHECK(currentYear->IsValueNumber());
-	CHECK(currentYear->AsDouble() == 1974);
+	ASSERT_TRUE(currentYear->IsOk());
+	EXPECT_TRUE(currentYear->IsValueNumber());
+	EXPECT_TRUE(currentYear->AsDouble() == 1974);
 
 	// everything should have been parsed OK, so shouldn't have any error log
-	CHECK(json->GetLastError().empty());
+	EXPECT_TRUE(json->GetLastError().empty());
 }
 
 //-----------------------------------------------------
-TEST_CASE("Load & Save", "[file]")
+TEST(File, LoadAndSave)
 {
 	const auto json = wxSimpleJSON::Create(LR"(
 {
@@ -344,87 +343,87 @@ TEST_CASE("Load & Save", "[file]")
     }
 ]
 })");
-	REQUIRE(json->IsOk());
-	REQUIRE(json->Save(wxFileName::GetTempDir() + L"/json.tmp"));
+	ASSERT_TRUE(json->IsOk());
+	ASSERT_TRUE(json->Save(wxFileName::GetTempDir() + L"/json.tmp"));
 
 	const auto jsonFromFile = wxSimpleJSON::LoadFile(wxFileName::GetTempDir() + L"/json.tmp");
-	REQUIRE(jsonFromFile->IsOk());
+	ASSERT_TRUE(jsonFromFile->IsOk());
 	auto datasets = jsonFromFile->GetProperty(L"datasets");
-	REQUIRE(datasets->IsOk());
-	CHECK(datasets->IsValueArray());
-	CHECK_FALSE(datasets->IsValueBoolean());
-	CHECK_FALSE(datasets->IsValueNull());
-	CHECK_FALSE(datasets->IsValueNumber());
-	CHECK_FALSE(datasets->IsValueObject());
-	CHECK_FALSE(datasets->IsValueString());
+	ASSERT_TRUE(datasets->IsOk());
+	EXPECT_TRUE(datasets->IsValueArray());
+	EXPECT_FALSE(datasets->IsValueBoolean());
+	EXPECT_FALSE(datasets->IsValueNull());
+	EXPECT_FALSE(datasets->IsValueNumber());
+	EXPECT_FALSE(datasets->IsValueObject());
+	EXPECT_FALSE(datasets->IsValueString());
 
 	// non-sensical conversions should fail, returning to default value
-	CHECK(datasets->AsDouble() == -1);
-	CHECK(datasets->AsArrayString().empty());
-	CHECK(datasets->AsString().empty());
-	CHECK(datasets->AsDoubles().empty());
-	CHECK_FALSE(datasets->AsBool());
+	EXPECT_TRUE(datasets->AsDouble() == -1);
+	EXPECT_TRUE(datasets->AsArrayString().empty());
+	EXPECT_TRUE(datasets->AsString().empty());
+	EXPECT_TRUE(datasets->AsDoubles().empty());
+	EXPECT_FALSE(datasets->AsBool());
 
 	auto nodes = datasets->AsNodes();
-	REQUIRE(nodes.size() == 2);
+	ASSERT_TRUE(nodes.size() == 2);
 	auto currentDataset = nodes[0];
-	REQUIRE(currentDataset->IsOk());
-	CHECK(currentDataset->HasProperty(L"name"));
-	CHECK(currentDataset->GetProperty(L"name")->IsOk());
-	CHECK(currentDataset->GetProperty(L"name")->AsString() == L"Head Count");
+	ASSERT_TRUE(currentDataset->IsOk());
+	EXPECT_TRUE(currentDataset->HasProperty(L"name"));
+	EXPECT_TRUE(currentDataset->GetProperty(L"name")->IsOk());
+	EXPECT_TRUE(currentDataset->GetProperty(L"name")->AsString() == L"Head Count");
 
-	CHECK(currentDataset->HasProperty(L"file-path"));
-	CHECK(currentDataset->GetProperty(L"file-path")->IsOk());
-	CHECK(currentDataset->GetProperty(L"file-path")->AsString() == L"Head Count.txt");
+	EXPECT_TRUE(currentDataset->HasProperty(L"file-path"));
+	EXPECT_TRUE(currentDataset->GetProperty(L"file-path")->IsOk());
+	EXPECT_TRUE(currentDataset->GetProperty(L"file-path")->AsString() == L"Head Count.txt");
 
-	CHECK(currentDataset->HasProperty(L"year"));
-	CHECK(currentDataset->GetProperty(L"year")->IsOk());
-	CHECK(currentDataset->GetProperty(L"year")->AsDouble() == 2025);
+	EXPECT_TRUE(currentDataset->HasProperty(L"year"));
+	EXPECT_TRUE(currentDataset->GetProperty(L"year")->IsOk());
+	EXPECT_TRUE(currentDataset->GetProperty(L"year")->AsDouble() == 2025);
 
 	// next node
 	currentDataset = nodes[1];
-	REQUIRE(currentDataset->IsOk());
-	CHECK(currentDataset->HasProperty(L"name"));
-	CHECK(currentDataset->GetProperty(L"name")->IsOk());
-	CHECK(currentDataset->GetProperty(L"name")->AsString() == L"Enrollment");
+	ASSERT_TRUE(currentDataset->IsOk());
+	EXPECT_TRUE(currentDataset->HasProperty(L"name"));
+	EXPECT_TRUE(currentDataset->GetProperty(L"name")->IsOk());
+	EXPECT_TRUE(currentDataset->GetProperty(L"name")->AsString() == L"Enrollment");
 
-	CHECK(currentDataset->HasProperty(L"file-path"));
-	CHECK(currentDataset->GetProperty(L"file-path")->IsOk());
-	CHECK(currentDataset->GetProperty(L"file-path")->AsString() == L"Enrollment.txt");
+	EXPECT_TRUE(currentDataset->HasProperty(L"file-path"));
+	EXPECT_TRUE(currentDataset->GetProperty(L"file-path")->IsOk());
+	EXPECT_TRUE(currentDataset->GetProperty(L"file-path")->AsString() == L"Enrollment.txt");
 
-	CHECK(currentDataset->HasProperty(L"year"));
-	CHECK(currentDataset->GetProperty(L"year")->IsOk());
-	CHECK(currentDataset->GetProperty(L"year")->AsDouble() == 1987);
+	EXPECT_TRUE(currentDataset->HasProperty(L"year"));
+	EXPECT_TRUE(currentDataset->GetProperty(L"year")->IsOk());
+	EXPECT_TRUE(currentDataset->GetProperty(L"year")->AsDouble() == 1987);
 
 	// everything should have been parsed OK, so shouldn't have any error log
-	CHECK(json->GetLastError().empty());
+	EXPECT_TRUE(json->GetLastError().empty());
 }
 
 //-----------------------------------------------------
-TEST_CASE("Bad Load", "[file]")
+TEST(File, BadLoad)
 {
 	if (!wxFileName::FileExists(wxFileName::GetTempDir() + L"/json_this_likely_is_missing.tmp"))
 	{
 		const auto jsonFromFile = wxSimpleJSON::LoadFile(wxFileName::GetTempDir() + L"/json_this_likely_is_missing.tmp");
-		REQUIRE_FALSE(jsonFromFile->IsOk());
-		REQUIRE(jsonFromFile->IsNull());
+		ASSERT_FALSE(jsonFromFile->IsOk());
+		ASSERT_TRUE(jsonFromFile->IsNull());
 	}
 }
 
 //-----------------------------------------------------
-TEST_CASE("Garbage", "[fuzzing]")
+TEST(Fuzzing, Garbage)
 {
 	// a missing quote, should fail gracefully with an error log
 	const auto json = wxSimpleJSON::Create(LR"(
 {
 "datasets": [ "Head Count", Enrollment" ]
 })");
-	REQUIRE_FALSE(json->IsOk());
-	CHECK_FALSE(json->GetLastError().empty());
+	ASSERT_FALSE(json->IsOk());
+	EXPECT_FALSE(json->GetLastError().empty());
 }
 
 //-----------------------------------------------------
-TEST_CASE("Delete", "[add/delete]")
+TEST(AddDelete, Delete)
 {
 	const auto json = wxSimpleJSON::Create(LR"(
 {
@@ -433,23 +432,23 @@ TEST_CASE("Delete", "[add/delete]")
 "salary": 2200000.97,
 "status" : [ "active", "remote" ]
 })");
-	REQUIRE(json->IsOk());
+	ASSERT_TRUE(json->IsOk());
 	// out of range or non-existent
-	CHECK_FALSE(json->DeleteProperty(-1));
-	CHECK_FALSE(json->DeleteProperty(10));
-	CHECK_FALSE(json->DeleteProperty(L"bogus"));
-	CHECK_FALSE(json->DeleteProperty(L""));
+	EXPECT_FALSE(json->DeleteProperty(-1));
+	EXPECT_FALSE(json->DeleteProperty(10));
+	EXPECT_FALSE(json->DeleteProperty(L"bogus"));
+	EXPECT_FALSE(json->DeleteProperty(L""));
 
-	CHECK(json->GetProperty(L"status")->IsOk());
-	CHECK_FALSE(json->GetProperty(L"status")->DeleteProperty(-10)); // out of range
-	CHECK_FALSE(json->GetProperty(L"status")->DeleteProperty(2)); // out of range
-	CHECK(json->GetProperty(L"status")->DeleteProperty(0));
-	REQUIRE(json->GetProperty(L"status")->AsStrings().size() == 1);
-	REQUIRE(json->GetProperty(L"status")->AsStrings()[0] == L"remote");
+	EXPECT_TRUE(json->GetProperty(L"status")->IsOk());
+	EXPECT_FALSE(json->GetProperty(L"status")->DeleteProperty(-10)); // out of range
+	EXPECT_FALSE(json->GetProperty(L"status")->DeleteProperty(2)); // out of range
+	EXPECT_TRUE(json->GetProperty(L"status")->DeleteProperty(0));
+	ASSERT_TRUE(json->GetProperty(L"status")->AsStrings().size() == 1);
+	ASSERT_TRUE(json->GetProperty(L"status")->AsStrings()[0] == L"remote");
 }
 
 //-----------------------------------------------------
-TEST_CASE("Add", "[add/delete]")
+TEST(AddDelete, Add)
 {
 	const auto json = wxSimpleJSON::Create(LR"(
 {
@@ -459,36 +458,36 @@ TEST_CASE("Add", "[add/delete]")
 "status" : [ "active", "remote" ]
 })");
 
-	REQUIRE(json->IsOk());
+	ASSERT_TRUE(json->IsOk());
 	json->Add(L"user-name", wxString{ L"Stefano" });
 	auto userName = json->GetProperty(L"user-name");
-	CHECK(userName->IsOk());
-	CHECK(userName->AsString() == wxString{ L"Stefano" });
+	EXPECT_TRUE(userName->IsOk());
+	EXPECT_TRUE(userName->AsString() == wxString{ L"Stefano" });
 
 	// make it a number
 	json->Add(L"user-name", 105756.0);
 	userName = json->GetProperty(L"user-name");
-	CHECK(userName->IsOk());
-	CHECK(userName->AsDouble() == 105756.0);
+	EXPECT_TRUE(userName->IsOk());
+	EXPECT_TRUE(userName->AsDouble() == 105756.0);
 
 	// make it a bool
 	json->Add(L"user-name", true);
 	userName = json->GetProperty(L"user-name");
-	CHECK(userName->IsOk());
-	CHECK(userName->AsBool());
+	EXPECT_TRUE(userName->IsOk());
+	EXPECT_TRUE(userName->AsBool());
 
 	// make it an array of strings
 	json->Add(L"user-name", wxArrayString{ L"Blake M.", L"Stefano" });
 	userName = json->GetProperty(L"user-name");
-	CHECK(userName->IsOk());
-	REQUIRE(userName->AsStrings().size() == 2);
-	CHECK(userName->AsStrings()[0] == L"Blake M.");
-	CHECK(userName->AsStrings()[1] == L"Stefano");
+	EXPECT_TRUE(userName->IsOk());
+	ASSERT_TRUE(userName->AsStrings().size() == 2);
+	EXPECT_TRUE(userName->AsStrings()[0] == L"Blake M.");
+	EXPECT_TRUE(userName->AsStrings()[1] == L"Stefano");
 
 	// add an entirely new node
 	json->Add(L"location", wxString{ L"Ohio" });
 	auto location = json->GetProperty(L"location");
-	CHECK(location->IsOk());
-	CHECK_FALSE(location->IsNull());
-	CHECK(location->AsString() == wxString{ L"Ohio" });
+	EXPECT_TRUE(location->IsOk());
+	EXPECT_FALSE(location->IsNull());
+	EXPECT_TRUE(location->AsString() == wxString{ L"Ohio" });
 }
